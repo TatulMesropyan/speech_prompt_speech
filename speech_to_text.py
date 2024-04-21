@@ -4,17 +4,14 @@ from openai import OpenAI
 
 
 def speech_to_text(audio_file_path, client: OpenAI):
-    supported_formats = ('.mp3', '.wav', '.ogg', '.mp4', '.mpeg', '.mpga', '.m4a', '.webm')
+    supported_formats = ('flac', 'm4a', 'mp3', 'mp4', 'mpeg', 'mpga', 'oga', 'ogg', 'wav', 'webm')
     if not audio_file_path.endswith(supported_formats):
         return "Invalid format"
 
-    with open(audio_file_path, 'rb') as audio_file:
-        audio_content = audio_file.read()
-
+    audio_file = open(audio_file_path, "rb")
     transcription = client.audio.transcriptions.create(
         model="whisper-1",
-        file=io.BytesIO(audio_content),
+        file=audio_file,
         response_format="text"
     )
-    print(transcription.text)
-    return transcription.text
+    return transcription

@@ -8,10 +8,12 @@ client = helpers.get_client()
 
 
 root_dir = os.path.dirname(os.path.abspath(__file__))
-print(root_dir)
 file_name = "speech.m4a"
 audio_file_path = os.path.join(root_dir, file_name)
-
 text = stt.speech_to_text(audio_file_path, client)
-
-tts.text_to_speech(text, client)
+response = client.completions.create(
+  model="gpt-3.5-turbo-instruct",
+  prompt=text,
+  temperature=1
+)
+tts.text_to_speech(response.choices[0].text, client)
